@@ -18,6 +18,7 @@ public class OrderDTOMapper {
 		dto.setUser(UserDTOMapper.UserToDTO(user));
 		dto.setOrderDate(order.getOrderDate());
 		dto.setTotalPrice(order.getTotalPrice());
+		dto.setStatus(order.getStatus());
 		
 		return dto;
 		
@@ -33,6 +34,7 @@ public class OrderDTOMapper {
 		dto.setOrderItemsId(order.getOrderItems().stream()
 				.map(orderItem -> OrderItemDTOMapper.orderItemToDTO(orderItem))
 				.toList());
+		dto.setStatus(order.getStatus());
 		
 		return dto;
 		
@@ -44,6 +46,7 @@ public class OrderDTOMapper {
 		dto.setOrderId(order.getOrderId());
 		dto.setUserId(order.getUser().getUserId());
 		dto.setOrderDate(order.getOrderDate());
+		dto.setStatus(order.getStatus());
 		
 		return dto;
 		
@@ -60,6 +63,7 @@ public class OrderDTOMapper {
 				.stream()
 				.map(orderItem -> OrderItemDTOMapper.DTOToOrderItem(orderItem))
 				.toList());
+		order.setStatus(orderDTO.getStatus());
 		
 		return order;
 		
@@ -70,6 +74,7 @@ public class OrderDTOMapper {
 		
 		order.setOrderId(dto.getOrderId());
 		order.setOrderDate(dto.getOrderDate());
+		order.setStatus(dto.getStatus());
 		
 		return order;
 	}
@@ -81,7 +86,7 @@ public class OrderDTOMapper {
 		dto.setUserId(order.getUser().getUserId());
 		dto.setOrderId(order.getUser().getUserId());
 		dto.setOrderDate(order.getOrderDate());
-		
+		dto.setStatus(order.getStatus());
 		
 		return dto;
 		

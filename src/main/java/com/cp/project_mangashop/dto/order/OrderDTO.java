@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.cp.project_mangashop.dto.orderItem.OrderItemDTO;
 import com.cp.project_mangashop.dto.user.UserDTO;
+import com.cp.project_mangashop.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.NotNull;
@@ -22,8 +23,7 @@ public class OrderDTO {
 	private LocalDate orderDate;
 	@Positive(message = "Il prezzo deve essere positivo")
 	private BigDecimal totalPrice;
-	
 	private List<OrderItemDTO> orderItemsId;
-	
+	private OrderStatus status;
 	
 }

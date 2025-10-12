@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 //.anyRequest().permitAll()
                 				.requestMatchers("/users/register", "/users/login", "/public/**", "/products/**", "/products/update/**", "/users/**").permitAll() // accesso libero
-                                .requestMatchers("/admin/**", "/users/profile").hasRole("ADMIN") // solo admin
+                                .requestMatchers("/admin/**", "/orders/admin/all", "/users/profile").hasRole("ADMIN") // solo admin
                                 .anyRequest().authenticated() // tutti gli altri endpoint richiedono login
                 )
                 .userDetailsService(userDetailsService)

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.cp.project_mangashop.dto.orderItem.OrderItemCreateDTO;
 import com.cp.project_mangashop.dto.orderItem.OrderItemDTO;
+import com.cp.project_mangashop.enums.OrderStatus;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -19,5 +20,5 @@ public class OrderCreateDTO {
 	private LocalDate orderDate;
 	
 	private List<OrderItemCreateDTO> orderItems;
-	
+	private OrderStatus status = OrderStatus.IN_ELABORAZIONE;
 }
