@@ -1,6 +1,0 @@
-Elenco del percorso delle cartelle per il volume Elements
-Numero di serie del volume: 30F2-D1C8
-E:\FILES\PROGRAMMING\ECLISPE_WORKSPACE\DEV\PROJECT_MANGASHOP\SRC\MAIN\JAVA\COM\CP\PROJECT_MANGASHOP\-D
-Percorso non valido - \FILES\PROGRAMMING\ECLISPE_WORKSPACE\DEV\PROJECT_MANGASHOP\SRC\MAIN\JAVA\COM\CP\PROJECT_MANGASHOP\-D
-Non esistono sottocartelle 
-
