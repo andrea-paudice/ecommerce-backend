@@ -26,7 +26,7 @@ public class Cart {
 	private User user;
 
 	@OneToMany(mappedBy = "cart")
-	private List<CartItem> products;
+	private List<CartItem> cartItems;
 	
 	private LocalDate creationDate;
 	private LocalDate updateDate;
