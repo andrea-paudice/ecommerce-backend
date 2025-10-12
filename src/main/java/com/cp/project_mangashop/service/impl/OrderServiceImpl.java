@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService{
 			
 		}
 		
-		
+		order.setStatus(orderCreateDTO.getStatus());
 		order.setOrderItems(items);
 		order.setTotalPrice(totalPrice.setScale(2, RoundingMode.HALF_UP));
 		orderRepo.save(order);
@@ -114,43 +114,51 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public Order updateOrder(int orderId, OrderUpdateDTO orderUpdate) {
 		Order existing = getOrderById(orderId);
-		User user;
+		
 		if(existing == null) {
 			throw new RuntimeException("Ordine non trovato.");
 		}
 		
-		if(existing.getUser().getUserId() != orderUpdate.getUserId()) {
-			user = userService.getUser(orderUpdate.getUserId());
+		if(orderUpdate.getUserId() != 0) {
+			User user = userService.getUser(orderUpdate.getUserId());
 			existing.setUser(user);
 		}
+		
+//		if(existing.getUser().getUserId() != orderUpdate.getUserId()) {
+//			user = userService.getUser(orderUpdate.getUserId());
+//			existing.setUser(user);
+//		}
 		
 		BigDecimal totalPrice = BigDecimal.ZERO;
 		List<OrderItem> updatedItems = new ArrayList<>();
 		
-		for (OrderItemCreateDTO itemDTO : orderUpdate.getOrderItems()) {
-			Product productDTO = productService.getProductById(itemDTO.getProductId());
-			if(productDTO == null) {
-				throw new RuntimeException("Prodotto non trovato");
+		if(orderUpdate.getOrderItems() != null) {
+			for (OrderItemCreateDTO itemDTO : orderUpdate.getOrderItems()) {
+				Product productDTO = productService.getProductById(itemDTO.getProductId());
+				if(productDTO == null) {
+					throw new RuntimeException("Prodotto non trovato");
+				}
+				
+				OrderItem orderItem = new OrderItem();
+				
+				orderItem.setIdOrderItem(itemDTO.getId());
+				orderItem.setOrder(existing);
+				orderItem.setOrder((existing));
+				orderItem.setProduct((productDTO));
+				orderItem.setQuantity(itemDTO.getQuantity());
+				orderItem.setPrice(BigDecimal.valueOf(orderItem.getProduct().getPrice())
+						.setScale(2, RoundingMode.HALF_UP));
+				
+				totalPrice = totalPrice.add(orderItem.getPrice());
+				updatedItems.add(orderItem);
+				
 			}
 			
-			OrderItem orderItem = new OrderItem();
-			
-			orderItem.setIdOrderItem(itemDTO.getId());
-			orderItem.setOrder(existing);
-			orderItem.setOrder((existing));
-			orderItem.setProduct((productDTO));
-			orderItem.setQuantity(itemDTO.getQuantity());
-			orderItem.setPrice(BigDecimal.valueOf(orderItem.getProduct().getPrice())
-					.setScale(2, RoundingMode.HALF_UP));
-			
-			totalPrice = totalPrice.add(orderItem.getPrice());
-			updatedItems.add(orderItem);
-			
+			existing.setOrderItems(updatedItems);
 		}
 		
+		existing.setStatus(orderUpdate.getStatus());
 		existing.setOrderDate(LocalDate.now());
-		existing.setOrderItems(updatedItems);
-		
 		orderRepo.save(existing);
 		
 		return existing;
@@ -160,6 +168,17 @@ public class OrderServiceImpl implements OrderService{
 	public void deleteOrder(int orderId) {
 		orderRepo.deleteById(orderId);
 		
+	}
+
+	@Override
+	public List<OrderDTO> getOrderByUser(User user) {
+		List<Order> orders = orderRepo.findByUser(user);
+		List<OrderDTO> ordersDTO = orders
+				.stream()
+				.map(order -> OrderDTOMapper.orderToDTO(order))
+				.toList();
+		
+		return ordersDTO;
 	}
 
 }

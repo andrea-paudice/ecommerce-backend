@@ -26,7 +26,7 @@ import com.cp.project_mangashop.security.JwtUtil;
 import com.cp.project_mangashop.service.interfaces.UserService;
 
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping(path = "/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
@@ -39,7 +39,9 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping(path = "/all")
+	// API ADMIN
+	
+	@GetMapping(path = "/admin/user/all")
 	public ResponseEntity<?> getAll() {
 		List<User> users = userService.getAllUsers();
 		
@@ -54,7 +56,7 @@ public class UserController {
 		return new ResponseEntity<>(usersDTO, HttpStatus.OK);
 	}
 	
-	@GetMapping(path = "/{id_user}")
+	@GetMapping(path = "/admin/user/{id_user}")
 	public ResponseEntity<?> getUser(@PathVariable int id_user) {
 		User user = userService.getUser(id_user);
 		UserDTO userDTO = UserDTOMapper.UserToDTO(user);
@@ -62,18 +64,11 @@ public class UserController {
 		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
 	
-	@PostMapping(path = "/register")
-	public ResponseEntity<?> insertUser(@RequestBody User user) {
-		boolean created = userService.insertUser(user);
-		
-		if(!created) {
-			return new ResponseEntity<>("Utente già registrato", HttpStatus.BAD_REQUEST);
-		}
-		
-		return new ResponseEntity<>(user, HttpStatus.OK);
-	}
 	
-	@PostMapping(path = "/login")
+	
+	// API PUBBLICHE
+	
+	@PostMapping(path = "/public/user/login")
 	public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
 		String username = credentials.get("username");
         String password = credentials.get("password");
@@ -96,6 +91,19 @@ public class UserController {
             return new ResponseEntity<>("Credenziali errate.", HttpStatus.BAD_REQUEST);
         }
     }
+	
+	@PostMapping(path = "/public/user/register")
+	public ResponseEntity<?> insertUser(@RequestBody User user) {
+		boolean created = userService.insertUser(user);
+		
+		if(!created) {
+			return new ResponseEntity<>("Utente già registrato", HttpStatus.BAD_REQUEST);
+		}
+		
+		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+	
+	// TEST
 	
 	 @GetMapping("/profile")
 	    public Map<String, String> profile() {

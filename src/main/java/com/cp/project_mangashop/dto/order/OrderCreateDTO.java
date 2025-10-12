@@ -6,6 +6,10 @@ import java.util.List;
 import com.cp.project_mangashop.dto.orderItem.OrderItemCreateDTO;
 import com.cp.project_mangashop.dto.orderItem.OrderItemDTO;
 import com.cp.project_mangashop.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -18,7 +22,7 @@ public class OrderCreateDTO {
 	@NotNull(message = "L'utente è obbligatorio")
 	private int userId;
 	private LocalDate orderDate;
-	
 	private List<OrderItemCreateDTO> orderItems;
+	@JsonProperty("status")
 	private OrderStatus status = OrderStatus.IN_ELABORAZIONE;
 }

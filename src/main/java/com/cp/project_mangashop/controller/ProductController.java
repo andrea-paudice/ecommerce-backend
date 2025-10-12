@@ -26,14 +26,16 @@ import com.cp.project_mangashop.service.interfaces.ProductService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/products")
+@RequestMapping(path = "/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
 
 	@Autowired
 	ProductService productService;
 	
-	@GetMapping(path = "/all")
+	// API PUBBLICHE
+	
+	@GetMapping(path = "/public/product/all")
 	public ResponseEntity<?> getAll() {
 		List<ProductDTO> products = productService.getAll();
 		
@@ -45,7 +47,7 @@ public class ProductController {
 		
 	}
 	
-	@GetMapping(path = "/allFiltered")
+	@GetMapping(path = "/public/product/allFiltered")
 	public ResponseEntity<?> getAllFiltered() {
 		List<ProductDTO> products = productService.getAllNotDeleted();
 		
@@ -57,7 +59,7 @@ public class ProductController {
 		
 	}
 	
-	@GetMapping(path = "/{id_prod}")
+	@GetMapping(path = "/public/product/{id_prod}")
 	public ResponseEntity<?> get(@PathVariable int id_prod) {
 		Product product = productService.getProductById(id_prod);
 		ProductDTO productDTO = ProductDTOMapper.productToDTO(product);
@@ -66,7 +68,9 @@ public class ProductController {
 		
 	}
 	
-	@PostMapping("/admin/add")
+	// API ADMIN
+	
+	@PostMapping("/admin/product/add")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO) {
         
         	Product product = ProductDTOMapper.DTOtoProduct(productDTO);
@@ -75,7 +79,7 @@ public class ProductController {
             return ResponseEntity.status(201).body(product);
 		} 
 	
-	@PutMapping("/admin/update/{id_prod}")
+	@PutMapping("/admin/product/update/{id_prod}")
     public ResponseEntity<?> updateProduct(@PathVariable int id_prod, @Valid @RequestBody ProductDTO updatedProduct) {
 		Product existing = productService.getProductById(id_prod);
 		ProductDTO existingDTO = ProductDTOMapper.productToDTO(existing);
@@ -90,7 +94,7 @@ public class ProductController {
 		
     }
 	
-	@DeleteMapping(path = "/admin/soft-delete/{productId}")
+	@DeleteMapping(path = "/admin/product/soft-delete/{productId}")
 	public ResponseEntity<?> softDeleteProduct(@PathVariable int productId) {
 		Product existing = productService.getProductById(productId);
 		// productService.deleteProduct(existing.getId_prod());
@@ -103,7 +107,7 @@ public class ProductController {
 		
 	}
 	
-	@PutMapping(path = "/reactivate/{productId}")
+	@PutMapping(path = "admin/product/reactivate/{productId}")
 	public ResponseEntity<?> reactivateProduct(@PathVariable int productId) {
 		Product product = productService.getProductById(productId);
 		product.setDeleted(false);
