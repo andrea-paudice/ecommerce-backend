@@ -27,11 +27,23 @@ public class CartDTOMapper {
 		cartDTO.setCartId(cart.getCartId());
 		cartDTO.setUser(cart.getUser());
 		cartDTO.setCartItems(cart.getCartItems()
-				.stream()
-				.map(cartItem -> CartItemDTOMapper.cartItemToDTO(cartItem))
-				.toList());
+					.stream()
+					.map(cartItem -> CartItemDTOMapper.cartItemToDTO(cartItem))
+					.toList());
+		
 		cartDTO.setCreationDate(cart.getCreationDate());
 		cartDTO.setUpdateDate(cart.getUpdateDate());
+		
+		return cartDTO;
+	}
+	
+	public static CartCreateDTO CartToDTOCreate(Cart cart) {
+		CartCreateDTO cartDTO = new CartCreateDTO();
+		
+		cartDTO.setCartId(cart.getCartId());
+		cartDTO.setUser(cart.getUser());
+		cartDTO.setCreationDate(cart.getCreationDate());
+
 		
 		return cartDTO;
 	}

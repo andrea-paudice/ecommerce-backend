@@ -10,7 +10,6 @@ public class CartItemDTOMapper {
 		CartItem cartItem = new CartItem();
 		
 		cartItem.setIdCartItem(cartItemDTO.getIdCartItem());
-		cartItem.setCart(CartDTOMapper.DTOToCart(cartItemDTO.getCart()));
 		cartItem.setProduct(ProductDTOMapper.DTOtoProduct(cartItemDTO.getProduct()));
 
 		return cartItem;
@@ -21,7 +20,6 @@ public class CartItemDTOMapper {
 		CartItemDTO cartItemDTO = new CartItemDTO();
 		
 		cartItemDTO.setIdCartItem(cartItem.getIdCartItem());
-		cartItemDTO.setCart(CartDTOMapper.CartToDTO(cartItem.getCart()));
 		cartItemDTO.setProduct(ProductDTOMapper.productToDTO(cartItem.getProduct()));
 
 		return cartItemDTO;

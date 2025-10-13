@@ -9,7 +9,7 @@ import com.cp.project_mangashop.entity.User;
 public interface UserService {
 
 	public User getUser(int id_user);
-	public boolean insertUser(User user);
+	public User insertUser(User user);
 	public void updateUser(User user);
 	public void deleteUser(int id_user);
 	public List<User> getAllUsers();

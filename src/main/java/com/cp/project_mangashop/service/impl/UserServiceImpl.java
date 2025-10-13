@@ -6,9 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.cp.project_mangashop.dto.user.UserDTO;
-import com.cp.project_mangashop.dto.user.UserDTOMapper;
 import com.cp.project_mangashop.entity.User;
 import com.cp.project_mangashop.repository.UserRepository;
 import com.cp.project_mangashop.service.interfaces.UserService;
@@ -31,14 +28,14 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean insertUser(User user) {
+	public User insertUser(User user) {
 		if(userRepo.findById(user.getUserId()).isPresent()) {
-			return false;
+			return null;
 		}
 		
 		user.setPassword(encoder.encode(user.getPassword()));
 		userRepo.save(user);
-		return true;
+		return user;
 		
 	}
 

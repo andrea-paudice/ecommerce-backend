@@ -1,12 +1,22 @@
 package com.cp.project_mangashop.dto.product;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.cp.project_mangashop.entity.CartItem;
+import com.cp.project_mangashop.entity.User;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter @Setter @ToString
+@AllArgsConstructor @NoArgsConstructor
 public class ProductUpdateDTO {
 
 	private int prodId;

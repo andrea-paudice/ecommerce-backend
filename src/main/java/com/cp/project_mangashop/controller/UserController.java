@@ -1,5 +1,7 @@
 package com.cp.project_mangashop.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,10 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cp.project_mangashop.dto.AuthResponse;
+import com.cp.project_mangashop.dto.cart.CartCreateDTO;
+import com.cp.project_mangashop.dto.cart.CartDTO;
+import com.cp.project_mangashop.dto.cart.CartDTOMapper;
 import com.cp.project_mangashop.dto.user.UserDTO;
 import com.cp.project_mangashop.dto.user.UserDTOMapper;
+import com.cp.project_mangashop.entity.Cart;
 import com.cp.project_mangashop.entity.User;
 import com.cp.project_mangashop.security.JwtUtil;
+import com.cp.project_mangashop.service.interfaces.CartService;
 import com.cp.project_mangashop.service.interfaces.UserService;
 
 @RestController
@@ -38,6 +45,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	CartService cartService;
 	
 	// API ADMIN
 	
@@ -59,12 +69,12 @@ public class UserController {
 	@GetMapping(path = "/admin/user/{id_user}")
 	public ResponseEntity<?> getUser(@PathVariable int id_user) {
 		User user = userService.getUser(id_user);
-		UserDTO userDTO = UserDTOMapper.UserToDTO(user);
+		Cart cart = cartService.getCartByUser(user);
+		
+		UserDTO userDTO = UserDTOMapper.UserToDTOVisual(user, cart);
 		
 		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
-	
-	
 	
 	// API PUBBLICHE
 	
@@ -94,13 +104,17 @@ public class UserController {
 	
 	@PostMapping(path = "/public/user/register")
 	public ResponseEntity<?> insertUser(@RequestBody User user) {
-		boolean created = userService.insertUser(user);
+		User createdUser = userService.insertUser(user);
 		
-		if(!created) {
+		if(createdUser == null) {
 			return new ResponseEntity<>("Utente già registrato", HttpStatus.BAD_REQUEST);
 		}
+
+		Cart cart = cartService.saveCart(createdUser);
 		
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		UserDTO userDTO = UserDTOMapper.UserToDTO(createdUser, cart);
+		
+		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
 	
 	// TEST
