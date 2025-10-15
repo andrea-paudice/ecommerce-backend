@@ -26,11 +26,16 @@ import com.cp.project_mangashop.dto.product.ProductDTO;
 import com.cp.project_mangashop.dto.product.ProductDTOMapper;
 import com.cp.project_mangashop.dto.user.UserDTO;
 import com.cp.project_mangashop.dto.user.UserDTOMapper;
+import com.cp.project_mangashop.entity.Cart;
+import com.cp.project_mangashop.entity.CartItem;
 import com.cp.project_mangashop.entity.Order;
 import com.cp.project_mangashop.entity.OrderItem;
 import com.cp.project_mangashop.entity.Product;
 import com.cp.project_mangashop.entity.User;
+import com.cp.project_mangashop.enums.OrderStatus;
+import com.cp.project_mangashop.repository.OrderItemRepository;
 import com.cp.project_mangashop.repository.OrderRepository;
+import com.cp.project_mangashop.service.interfaces.CartService;
 import com.cp.project_mangashop.service.interfaces.OrderItemService;
 import com.cp.project_mangashop.service.interfaces.OrderService;
 import com.cp.project_mangashop.service.interfaces.ProductService;
@@ -50,6 +55,12 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	OrderItemService orderItemService;
+	
+	@Autowired
+	OrderItemRepository orderItemRepo;
+	
+	@Autowired
+	CartService cartService;
 	
 	@Override
 	public List<OrderDTO> getAll() {
@@ -75,41 +86,76 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public Order insertOrder(OrderCreateDTO orderCreateDTO) {
-		User user = userService.getUser(orderCreateDTO.getUserId());
+	public Order createOrderFromCart(User user) {
+		Cart cart = user.getCart();
 		
-		Order order = new Order();
-		order.setOrderDate(LocalDate.now());
-		order.setUser(user);
-		BigDecimal totalPrice = BigDecimal.ZERO;
-		List<OrderItem> items = new ArrayList<>();
-		
-		for (OrderItemCreateDTO itemDTO : orderCreateDTO.getOrderItems()) {
-			Product product = productService.getProductById(itemDTO.getProductId());
-			
-			BigDecimal itemPrice = BigDecimal.valueOf(product.getPrice())
-					.multiply(BigDecimal.valueOf(itemDTO.getQuantity()))
-	                .setScale(2, RoundingMode.HALF_UP);
-			
-			OrderItem orderItem = new OrderItem();
-			orderItem.setOrder(order);
-			orderItem.setProduct(product);
-			orderItem.setQuantity(itemDTO.getQuantity());
-			orderItem.setPrice(itemPrice);
-			
-			totalPrice = totalPrice.add(orderItem.getPrice());
-			items.add(orderItem);
-			
+		if(cart == null || cart.getCartItems().isEmpty()) {
+			throw new RuntimeException("Il carrello è vuoto");
 		}
 		
-		order.setStatus(orderCreateDTO.getStatus());
-		order.setOrderItems(items);
-		order.setTotalPrice(totalPrice.setScale(2, RoundingMode.HALF_UP));
-		orderRepo.save(order);
+		Order order = new Order();
+		order.setUser(user);
+		order.setStatus(OrderStatus.IN_ELABORAZIONE);
+		order.setOrderDate(LocalDate.now());
+		BigDecimal totalPrice = BigDecimal.ZERO;
+		List<OrderItem> orderItems = new ArrayList<>();
+		
+		for (CartItem cartItem : cart.getCartItems()) {
+			OrderItem orderItem = new OrderItem();
+			orderItem.setProduct(cartItem.getProduct());
+			orderItem.setOrder(order);
+			orderItem.setPrice(BigDecimal.valueOf(cartItem.getProduct().getPrice()).setScale(2, RoundingMode.HALF_UP));
+			orderItem.setQuantity(1);
+			orderItems.add(orderItem);
+			
+			totalPrice = totalPrice.add(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+		}
+		
+		order.setTotalPrice(totalPrice);
+		order.setOrderItems(orderItems);
+		orderRepo.save(order);		
+		cartService.clearCart(user);
 		
 		return order;
 		
 	}
+	
+//	@Override
+//	public Order insertOrder(OrderCreateDTO orderCreateDTO) {
+//		User user = userService.getUser(orderCreateDTO.getUserId());
+//		
+//		Order order = new Order();
+//		order.setOrderDate(LocalDate.now());
+//		order.setUser(user);
+//		BigDecimal totalPrice = BigDecimal.ZERO;
+//		List<OrderItem> items = new ArrayList<>();
+//		
+//		for (OrderItemCreateDTO itemDTO : orderCreateDTO.getOrderItems()) {
+//			Product product = productService.getProductById(itemDTO.getProductId());
+//			
+//			BigDecimal itemPrice = BigDecimal.valueOf(product.getPrice())
+//					.multiply(BigDecimal.valueOf(itemDTO.getQuantity()))
+//	                .setScale(2, RoundingMode.HALF_UP);
+//			
+//			OrderItem orderItem = new OrderItem();
+//			orderItem.setOrder(order);
+//			orderItem.setProduct(product);
+//			orderItem.setQuantity(itemDTO.getQuantity());
+//			orderItem.setPrice(itemPrice);
+//			
+//			totalPrice = totalPrice.add(orderItem.getPrice());
+//			items.add(orderItem);
+//			
+//		}
+//		
+//		order.setStatus(orderCreateDTO.getStatus());
+//		order.setOrderItems(items);
+//		order.setTotalPrice(totalPrice.setScale(2, RoundingMode.HALF_UP));
+//		orderRepo.save(order);
+//		
+//		return order;
+//		
+//	}
 
 	@Override
 	public Order updateOrder(int orderId, OrderUpdateDTO orderUpdate) {

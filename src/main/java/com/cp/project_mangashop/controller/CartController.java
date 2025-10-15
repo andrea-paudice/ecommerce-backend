@@ -3,6 +3,7 @@ package com.cp.project_mangashop.controller;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,13 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cp.project_mangashop.dto.cart.CartDTO;
 import com.cp.project_mangashop.dto.cart.CartDTOMapper;
-import com.cp.project_mangashop.dto.user.UserDTO;
-import com.cp.project_mangashop.dto.user.UserDTOMapper;
 import com.cp.project_mangashop.entity.Cart;
 import com.cp.project_mangashop.entity.CartItem;
 import com.cp.project_mangashop.entity.Product;
@@ -43,8 +41,7 @@ public class CartController {
     
     @GetMapping("/user/mycart")
     public ResponseEntity<?> getMyCart(Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        User user = userService.findByUsername(principal.getName());
         CartDTO cartDTO = CartDTOMapper.CartToDTO(cartService.getCartByUser(user));
         
         
@@ -53,8 +50,7 @@ public class CartController {
     
     @PostMapping("/user/add/{productId}")
     public ResponseEntity<?> addToCart(@PathVariable int productId, Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        User user = userService.findByUsername(principal.getName());
         Product product = productService.getProductById(productId);
         CartItem cartItem = new CartItem();
         Cart cart = cartService.getCartByUser(user);
@@ -69,17 +65,21 @@ public class CartController {
         return ResponseEntity.ok(cartDTO);
     }
 
-    @DeleteMapping("user/remove/{productId}")
-    public ResponseEntity<?> removeFromCart(@PathVariable int productId, Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
-        return ResponseEntity.ok(cartService.removeProductFromCart(user, productId));
+    @DeleteMapping("user/remove/{idCartitem}")
+    public ResponseEntity<?> removeFromCart(@PathVariable int idCartitem, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        Cart cart = cartService.getCartByUser(user);
+        CartItem cartItem = cartItemService.getCartItemById(idCartitem);
+        cartItemService.deleteCartitem(cartItem);
+        cartService.updateCart(cart);
+        CartDTO cartDTO = CartDTOMapper.CartToDTO(cart);
+        
+        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/clear")
     public ResponseEntity<?> clearCart(Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        User user = userService.findByUsername(principal.getName());
         cartService.clearCart(user);
         return ResponseEntity.ok("Carrello svuotato con successo.");
     }

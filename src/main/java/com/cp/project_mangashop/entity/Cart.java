@@ -37,5 +37,12 @@ public class Cart {
 	private LocalDate creationDate;
 	private LocalDate updateDate;
 	
+	@Override
+	public String toString() {
+		return "Cart [cartId=" + cartId + ", user=" + user + ", cartItems=" + cartItems + ", creationDate="
+				+ creationDate + ", updateDate=" + updateDate + "]";
+	}
+	
+	
 	
 }

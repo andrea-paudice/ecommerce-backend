@@ -52,5 +52,15 @@ public class Product {
     
     @OneToMany(mappedBy = "product")
     private List<CartItem> cartProduct;
+
+	@Override
+	public String toString() {
+		return "Product [id_prod=" + id_prod + ", prodName=" + prodName + ", price=" + price + ", brand=" + brand
+				+ ", description=" + description + ", category=" + category + ", releaseDate=" + releaseDate
+				+ ", available=" + available + ", quantity=" + quantity + ", imageUrl=" + imageUrl + ", deleted="
+				+ deleted + "]";
+	}
+    
+    
     
 }

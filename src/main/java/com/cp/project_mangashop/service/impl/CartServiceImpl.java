@@ -10,13 +10,19 @@ import com.cp.project_mangashop.entity.Cart;
 import com.cp.project_mangashop.entity.CartItem;
 import com.cp.project_mangashop.entity.User;
 import com.cp.project_mangashop.repository.CartRepository;
+import com.cp.project_mangashop.service.interfaces.CartItemRepository;
 import com.cp.project_mangashop.service.interfaces.CartService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CartServiceImpl implements CartService{
 
 	@Autowired
 	CartRepository cartRepo;
+	
+	@Autowired
+	CartItemRepository cartItemRepo;
 	
 	@Override
 	public Cart saveCart(User user) {
@@ -45,16 +51,19 @@ public class CartServiceImpl implements CartService{
 		
 	}
 
+
 	@Override
-	public Cart removeProductFromCart(User user, int productId) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public void clearCart(User user) {
+		Cart cart = user.getCart();
+		cartItemRepo.deleteByCart_CartId(cart.getCartId());
+		cartRepo.save(cart);
+		
 	}
 
 	@Override
-	public void clearCart(User user) {
-		// TODO Auto-generated method stub
-		
+	public void updateCart(Cart cart) {
+		cartRepo.save(cart);
 	}
 
 	

@@ -13,7 +13,7 @@ public interface UserService {
 	public void updateUser(User user);
 	public void deleteUser(int id_user);
 	public List<User> getAllUsers();
-	public Optional<User> findByUsername(String username);
+	public User findByUsername(String username);
 	public boolean login(User user);
 	
 }

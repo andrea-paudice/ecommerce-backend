@@ -9,4 +9,5 @@ import com.cp.project_mangashop.entity.User;
 
 public interface CartRepository extends JpaRepository<Cart, Integer> {
     Optional<Cart> findByUser(User user);
+  
 }

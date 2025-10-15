@@ -1,7 +1,5 @@
 package com.cp.project_mangashop.controller;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cp.project_mangashop.dto.AuthResponse;
-import com.cp.project_mangashop.dto.cart.CartCreateDTO;
-import com.cp.project_mangashop.dto.cart.CartDTO;
-import com.cp.project_mangashop.dto.cart.CartDTOMapper;
 import com.cp.project_mangashop.dto.user.UserDTO;
 import com.cp.project_mangashop.dto.user.UserDTOMapper;
 import com.cp.project_mangashop.entity.Cart;
@@ -84,16 +79,14 @@ public class UserController {
         String password = credentials.get("password");
 		
 		try {
-			Optional<User> user = userService.findByUsername(username);
-            if(!user.isPresent()) {
-            	return new ResponseEntity<>("Utente non registrato", HttpStatus.BAD_REQUEST);
-            }
+			User user = userService.findByUsername(username);
+       
 
             authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             
             String token = jwtUtil.generateToken(username);
 
-            return new ResponseEntity<>(new AuthResponse(user.get().getUsername(), user.get().getRole(), token), HttpStatus.OK);
+            return new ResponseEntity<>(new AuthResponse(user.getUsername(), user.getRole(), token), HttpStatus.OK);
 
 		}
             
