@@ -13,7 +13,8 @@ public interface OrderService {
 	public List<OrderDTO> getAll();
 	public Order getOrderById(int orderId);
 	public List<OrderDTO> getOrderByUser(User user);
-	public Order insertOrder(OrderCreateDTO order);
+	public Order createOrderFromCart(User user);
+	// public Order insertOrder(OrderCreateDTO order);
 	public Order updateOrder(int orderId, OrderUpdateDTO order);
 	public void deleteOrder(int orderId);
 	

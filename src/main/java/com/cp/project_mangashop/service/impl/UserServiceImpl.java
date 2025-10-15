@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Optional<User> findByUsername(String username) {
-		return userRepo.findByUsername(username);
+	public User findByUsername(String username) {
+		return userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("Utente non trovato."));
 	}
 
 	@Override

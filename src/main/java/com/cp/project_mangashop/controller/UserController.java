@@ -79,16 +79,14 @@ public class UserController {
         String password = credentials.get("password");
 		
 		try {
-			Optional<User> user = userService.findByUsername(username);
-            if(!user.isPresent()) {
-            	return new ResponseEntity<>("Utente non registrato", HttpStatus.BAD_REQUEST);
-            }
+			User user = userService.findByUsername(username);
+       
 
             authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             
             String token = jwtUtil.generateToken(username);
 
-            return new ResponseEntity<>(new AuthResponse(user.get().getUsername(), user.get().getRole(), token), HttpStatus.OK);
+            return new ResponseEntity<>(new AuthResponse(user.getUsername(), user.getRole(), token), HttpStatus.OK);
 
 		}
             

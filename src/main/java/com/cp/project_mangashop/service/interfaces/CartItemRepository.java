@@ -6,4 +6,6 @@ import com.cp.project_mangashop.entity.CartItem;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Integer>{
 
+	void deleteByCart_CartId(int idCart);
+	
 }

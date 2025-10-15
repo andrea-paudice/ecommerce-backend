@@ -41,5 +41,13 @@ public class OrderItem {
 	
 	@Column(columnDefinition = "Double")
 	private BigDecimal price;
+
+	@Override
+	public String toString() {
+		return "OrderItem [idOrderItem=" + idOrderItem + ", product=" + product + ", quantity=" + quantity + ", price="
+				+ price + "]";
+	}
+	
+	
 	
 }

@@ -51,4 +51,13 @@ public class Order {
 	
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
+
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", user=" + user + ", orderDate=" + orderDate + ", totalPrice="
+				+ totalPrice + ", orderItems=" + orderItems + ", status=" + status + "]";
+	}
+	
+	
+	
 }

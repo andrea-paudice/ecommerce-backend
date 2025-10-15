@@ -40,9 +40,8 @@ public class OrderItemServiceImpl implements OrderItemService{
 	}
 
 	@Override
-	public OrderItemDTO insertOrderItem(OrderItem orderItem) {
-		// TODO Auto-generated method stub
-		return null;
+	public void insertOrderItem(OrderItem orderItem) {
+		orderItemRepo.save(orderItem);
 	}
 
 	@Override

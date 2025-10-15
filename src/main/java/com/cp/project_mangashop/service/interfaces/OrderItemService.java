@@ -9,7 +9,7 @@ public interface OrderItemService {
 
 	public List<OrderItemDTO> getAll();
 	public OrderItemDTO getById(int idOrderItem);
-	public OrderItemDTO insertOrderItem(OrderItem orderItem);
+	public void insertOrderItem(OrderItem orderItem);
 	public OrderItemDTO updateOrderItem(OrderItem orderItem);
 	public void deleteOrderItem(int idOrderItem);
 	

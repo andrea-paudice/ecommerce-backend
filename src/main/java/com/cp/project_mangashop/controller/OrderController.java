@@ -84,8 +84,9 @@ public class OrderController {
 	// API USER
 	
 	@PostMapping(path = "/user/order/add")
-	public ResponseEntity<?> addOrder(@Valid @RequestBody OrderCreateDTO orderDTOCreate) {
-		Order order = orderService.insertOrder(orderDTOCreate);
+	public ResponseEntity<?> addOrder(Principal principal) {
+		User user = userService.findByUsername(principal.getName());
+		Order order = orderService.createOrderFromCart(user);
 		OrderDTO orderDTO = OrderDTOMapper.orderToDTO(order);
 		
 		return new ResponseEntity<>(orderDTO, HttpStatus.OK);
@@ -94,7 +95,7 @@ public class OrderController {
 	
 	@GetMapping(path = "/user/order/myorders")
 	public ResponseEntity<?> getMyOrders(Principal principal) {
-		User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("Utente non trovato."));
+		User user = userService.findByUsername(principal.getName());
 		List<OrderDTO> orders = orderService.getOrderByUser(user);
 		
 		return new ResponseEntity<>(orders, HttpStatus.OK);

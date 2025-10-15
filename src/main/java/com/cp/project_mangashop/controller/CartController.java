@@ -41,8 +41,7 @@ public class CartController {
     
     @GetMapping("/user/mycart")
     public ResponseEntity<?> getMyCart(Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        User user = userService.findByUsername(principal.getName());
         CartDTO cartDTO = CartDTOMapper.CartToDTO(cartService.getCartByUser(user));
         
         
@@ -51,8 +50,7 @@ public class CartController {
     
     @PostMapping("/user/add/{productId}")
     public ResponseEntity<?> addToCart(@PathVariable int productId, Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        User user = userService.findByUsername(principal.getName());
         Product product = productService.getProductById(productId);
         CartItem cartItem = new CartItem();
         Cart cart = cartService.getCartByUser(user);
@@ -69,8 +67,7 @@ public class CartController {
 
     @DeleteMapping("user/remove/{idCartitem}")
     public ResponseEntity<?> removeFromCart(@PathVariable int idCartitem, Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        User user = userService.findByUsername(principal.getName());
         Cart cart = cartService.getCartByUser(user);
         CartItem cartItem = cartItemService.getCartItemById(idCartitem);
         cartItemService.deleteCartitem(cartItem);
@@ -82,8 +79,7 @@ public class CartController {
 
     @DeleteMapping("/clear")
     public ResponseEntity<?> clearCart(Principal principal) {
-        User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        User user = userService.findByUsername(principal.getName());
         cartService.clearCart(user);
         return ResponseEntity.ok("Carrello svuotato con successo.");
     }
