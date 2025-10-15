@@ -4,17 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.cp.project_mangashop.dto.cartItem.CartItemDTO;
-import com.cp.project_mangashop.entity.CartItem;
 import com.cp.project_mangashop.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor

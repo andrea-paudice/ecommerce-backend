@@ -45,16 +45,16 @@ public class CartServiceImpl implements CartService{
 		
 	}
 
-	@Override
-	public Cart removeProductFromCart(User user, int productId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void clearCart(User user) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void updateCart(Cart cart) {
+		cartRepo.save(cart);
 	}
 
 	
